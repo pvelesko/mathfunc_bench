@@ -3,7 +3,16 @@
 #include <iostream>
 using namespace cl::sycl;
 
-int main(int, char**) {
+int main(int argc, char** argv) {
+
+  int n;
+  if (argc > 1) {
+    int n = std::atoi(argv[1]);
+  } else {
+    n = 3;
+  }
+  std::cout << "Using N = " << n << std::endl;
+
   int num[3] = {1, 1, 0};
   queue q(gpu_selector{});
   device dev = q.get_device();
