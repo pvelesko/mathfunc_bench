@@ -12,4 +12,4 @@ hipsycl: main.cpp
 	syclcc-clang-wrapper -std=c++14 ./main.cpp -o hipsycl 
 
 clean:
-	rm -f ./intel ./codeplay
+	rm -f ./intel ./codeplay ./hipsycl
