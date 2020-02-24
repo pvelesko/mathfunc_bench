@@ -3,7 +3,7 @@
 all: intel
 
 intel: main.cpp
-	clang++ -std=c++14 -fsycl -lsycl -lOpenCL ./main.cpp -o intel
+	dpcpp -std=c++14 -fsycl -I./ ./main.cpp -o intel
 
 codeplay: main.cpp
 	compute++ -std=c++14 -sycl -sycl-driver -lComputeCpp ./main.cpp -o codeplay
