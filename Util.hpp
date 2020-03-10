@@ -4,8 +4,35 @@ queue q;
 device dev;
 context ctx;
 
-void init() {
-  q = queue(gpu_selector{});
+auto exception_handler = [] (cl::sycl::exception_list exceptions) {
+  for (std::exception_ptr const& e : exceptions) {
+    try {
+  std::rethrow_exception(e);
+    } catch(cl::sycl::exception const& e) {
+  std::cout << "Caught asynchronous SYCL exception:\n"
+        << e.what() << std::endl;
+    }
+  }
+};
+
+
+inline void init() {
+  std::string env;
+  if (std::getenv("SYCL_DEVICE") != NULL) {
+    env = std::string(std::getenv("SYCL_DEVICE"));
+  } else {
+    env = std::string("");
+  }
+  std::cout << "Using DEVICE = " << env << std::endl;
+  if (!env.compare("gpu") or !env.compare("GPU")) {
+    q = cl::sycl::queue(cl::sycl::gpu_selector{}, exception_handler);
+  } else if (!env.compare("cpu") or !env.compare("CPU")) {
+    q = cl::sycl::queue(cl::sycl::cpu_selector{}, exception_handler);
+  } else if (!env.compare("host") or !env.compare("HOST")) {
+    q = cl::sycl::queue(cl::sycl::host_selector{}, exception_handler);
+  } else {
+    q = cl::sycl::queue(cl::sycl::default_selector{}, exception_handler);
+  }
   dev = q.get_device();
   ctx = q.get_context();
   std::cout << "Running on "

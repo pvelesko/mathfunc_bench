@@ -2,13 +2,13 @@
 
 all: intel
 
-intel: main.cpp
+intel: main.cpp Util.hpp
 	dpcpp -std=c++14 -fsycl -I./ ./main.cpp -o intel
 
-codeplay: main.cpp
+codeplay: main.cpp Util.hpp
 	compute++ -std=c++14 -sycl -sycl-driver -lComputeCpp ./main.cpp -o codeplay
 
-hipsycl: main.cpp
+hipsycl: main.cpp Util.hpp
 	syclcc-clang-wrapper -std=c++14 ./main.cpp -o hipsycl 
 
 clean:
