@@ -5,9 +5,9 @@ device dev;
 context ctx;
 
 void init() {
-  queue q(gpu_selector{});
-  device dev = q.get_device();
-  context ctx = q.get_context();
+  q = queue(gpu_selector{});
+  dev = q.get_device();
+  ctx = q.get_context();
   std::cout << "Running on "
             << dev.get_info<info::device::name>()
             << std::endl;
