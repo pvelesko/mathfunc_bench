@@ -7,7 +7,7 @@
 #include <chrono>
 
 using namespace cl::sycl;
-
+#define RTYPE double
 
 //float elapsed(event e) {
 //  float t0 = e.get_profiling_info<info::event_profiling::command_start>();
@@ -30,11 +30,11 @@ class CUDASelector : public cl::sycl::device_selector {
     }
 };
 
-float diff(float* ref, float* x) {
-  typedef std::numeric_limits<float> flt;
+RTYPE diff(RTYPE* ref, RTYPE* x) {
+  typedef std::numeric_limits<RTYPE> flt;
   std::cout.precision(flt::max_digits10);
-  float d = fabs(ref[0] - x[0]);
-  float p = fabs(ref[0] / x[0] * 100 - 100);
+  RTYPE d = abs(ref[0] - x[0]);
+  RTYPE p = abs(ref[0] / x[0] * 100 - 100);
   std::cout << std::fixed << "Absolute diff: " << d << std::endl;
   std::cout << std::fixed << "Percent diff: " << p << "%" << std::endl;
   return d;
@@ -67,8 +67,8 @@ int main(int argc, char** argv) {
 
   //init();
 
-  float* x = static_cast<float*>(malloc(n * sizeof(float)));
-  float* ref = static_cast<float*>(malloc(n * sizeof(float)));
+  RTYPE* x = static_cast<RTYPE*>(malloc(n * sizeof(RTYPE)));
+  RTYPE* ref = static_cast<RTYPE*>(malloc(n * sizeof(RTYPE)));
   for (int i = 0; i < n; i++) {
     x[i] = 1.23f;
     ref[i] = 1.23f;
@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
 
   int size = n; 
   {
-  buffer<float, 1> x_d(x, range<1>(n));
+  buffer<RTYPE, 1> x_d(x, range<1>(n));
   auto t0 = std::chrono::high_resolution_clock::now();
   auto e = q.submit([&] (handler& cgh) { // q scope
     auto x = x_d.get_access<access::mode::read_write>(cgh);
