@@ -67,27 +67,25 @@ int main(int argc, char** argv) {
 
   //init();
 
-  RTYPE* x = static_cast<RTYPE*>(malloc(n * sizeof(RTYPE)));
-  RTYPE* ref = static_cast<RTYPE*>(malloc(n * sizeof(RTYPE)));
-  for (int i = 0; i < n; i++) {
-    x[i] = 1.23f;
-    ref[i] = 1.23f;
-  }
+  RTYPE* x = static_cast<RTYPE*>(malloc(2 * sizeof(RTYPE)));
+  RTYPE* ref = static_cast<RTYPE*>(malloc(2 * sizeof(RTYPE)));
   x[0] = 0;
   ref[0] = 0;
+  x[1] = 1.337;
+  ref[1] = 1.337;
 
-  for(int i = 1; i < n; i++)
-    ref[0] += sqrt(ref[i]);
+  for(int i = 0; i < n; i++)
+    ref[0] += sqrt(ref[1]);
 
   int size = n; 
   {
-  buffer<RTYPE, 1> x_d(x, range<1>(n));
+  buffer<RTYPE, 1> x_d(x, range<1>(2));
   auto t0 = std::chrono::high_resolution_clock::now();
   auto e = q.submit([&] (handler& cgh) { // q scope
     auto x = x_d.get_access<access::mode::read_write>(cgh);
     cgh.single_task<class _sqrt>([=] {
-      for(int i = 1; i < size; i++)
-        x[0] += sqrt(x[i]);
+      for(int i = 0; i < size; i++)
+        x[0] += sqrt(x[1]);
     }); // end task scope
   }); // end q scope
   e.wait();
