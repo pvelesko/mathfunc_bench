@@ -1,4 +1,7 @@
-# Testbed for measuring accuracy and performance of math functions in SYCL
+# The Benchmark
+Testbed for measuring accuracy and performance of math functions in SYCL. 
+Adding -ffast-math gives 2x performance boost for nbody-demo code on CUDA devices. 
+
 
 Compilers and Backends supported:
 1. Intel DPCPP compiler, gen9
