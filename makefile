@@ -11,5 +11,8 @@ codeplay: main.cpp Util.hpp
 hipsycl: main.cpp Util.hpp
 	syclcc-clang-wrapper -std=c++14 ./main.cpp -o hipsycl 
 
+cudasycl: main.cpp Util.hpp
+	clang++ -DCUDA -fsycl -fsycl-targets=nvptx64-nvidia-cuda-sycldevice ./main.cpp -o cudasycl
+
 clean:
 	rm -f ./intel ./codeplay ./hipsycl
