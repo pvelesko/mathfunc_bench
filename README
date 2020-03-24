@@ -1,1 +1,18 @@
+# Testbed for measuring accuracy and performance of math functions in SYCL
+
+Compilers and Backends supported:
+1. Intel DPCPP compiler, gen9
+2. hipSYCL for CUDA Devices
+3. Intel LLVM and Codeplay's CUDA backend https://github.com/codeplaysoftware/sycl-for-cuda should work, but current issue with linking math library calls
+
+## Getting Started
+export SYCL_DEVICE=cpu/gpu/host/cuda
+make intel; 
+make hipsycl;
+
+## Notes
+hipSYCL does not support event profiling nor USM so buffers and system timers must be used. 
+Since the entire offload region is measured, select n large enough  so that one-time offload costs are negligible compared to function call
+
+
 
